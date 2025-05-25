@@ -1,5 +1,9 @@
+import { PostQueryFields } from './queries/post-query.js';
 import { Type } from '@fastify/type-provider-typebox';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { UserQueryFields } from './queries/user-query.js';
+import { ProfileQueryFields } from './queries/profile-query.js';
+import { MemeberTypeQueryFields } from './queries/member-type-query.js';
 
 export const gqlResponseSchema = Type.Partial(
   Type.Object({
@@ -20,4 +24,14 @@ export const createGqlResponseSchema = {
   ),
 };
 
-export const gqlSchema = new GraphQLSchema({});
+export const gqlSchema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'RootQuery',
+    fields: {
+      ...UserQueryFields,
+      ...ProfileQueryFields,
+      ...PostQueryFields,
+      ...MemeberTypeQueryFields,
+    },
+  }),
+});
