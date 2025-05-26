@@ -18,7 +18,7 @@ export const UserQueryFields = {
         },
     },
     users: {
-        type: new GraphQLList(User),
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
         async resolve(_src, _, ctx: Context, info: GraphQLResolveInfo) {
             const { fields } = simplifyParsedResolveInfoFragmentWithType(parseResolveInfo(info) as ResolveTree, new GraphQLList(User));
 

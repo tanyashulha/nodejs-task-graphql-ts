@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLFloat, GraphQLString, GraphQLInputObjectType, GraphQLList } from 'graphql';
+import { GraphQLObjectType, GraphQLFloat, GraphQLString, GraphQLInputObjectType, GraphQLList, GraphQLFieldConfig, GraphQLNonNull } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { Post } from './post.js';
 import { Profile } from './profile.js';
@@ -24,18 +24,18 @@ export type UserType = Static<typeof userSchema> & {
 
 export const User = new GraphQLObjectType<UserType, Context>({
     name: 'User',
-    fields: () => ({
+    fields: (): Record<string, GraphQLFieldConfig<UserType, Context>>  => ({
         id: {
-            type: UUIDType
+            type: new GraphQLNonNull(UUIDType),
         },
         name: {
-            type: GraphQLString
+            type: new GraphQLNonNull(GraphQLString),
         },
         balance: {
-            type: GraphQLFloat
+            type: new GraphQLNonNull(GraphQLFloat),
         },
         posts: {
-            type: new GraphQLList(Post),
+            type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
             resolve(user, _, ctx: Context) {
                 return ctx.post.load(user.id);
             },
@@ -47,25 +47,21 @@ export const User = new GraphQLObjectType<UserType, Context>({
             },
         },
         userSubscribedTo: {
-            type: new GraphQLList(User),
+            type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
             resolve(user, _, ctx: Context) {
-                if (user?.userSubscribedTo) {
-                    return ctx.user.loadMany(
-                        user.userSubscribedTo.map(({ authorId }) => authorId),
-                    );
-                }
-               return null;
+                if (!user?.userSubscribedTo) return [];
+                return ctx.user.loadMany(
+                    user.userSubscribedTo.map(({ authorId }) => authorId),
+                );
             },
         },
         subscribedToUser: {
-            type: new GraphQLList(User),
+            type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
             resolve(user, _, ctx: Context) {
-                if (user?.subscribedToUser) {
-                    return ctx.user.loadMany(
-                        user.subscribedToUser.map(({ subscriberId }) => subscriberId),
-                    );
-                }
-                return null;
+                if (!user?.subscribedToUser) return [];
+                return ctx.user.loadMany(
+                    user.subscribedToUser.map(({ subscriberId }) => subscriberId),
+                );
             },
         },
     }),
