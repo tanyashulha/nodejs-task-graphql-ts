@@ -27,7 +27,9 @@ export const UserQueryFields = {
                 subscribedToUser: 'subscribedToUser' in fields && !!fields.subscribedToUser,
             }});
 
-            return users.forEach((user) => ctx.user.prime(user.id, user));
+            users.forEach((user) => ctx.user.prime(user.id, user));
+
+            return users;
         },
     },
 }
