@@ -26,7 +26,7 @@ export const Profile = new GraphQLObjectType<ProfileType, Context>({
             type: GraphQLInt
         },
         memberType: {
-            type: new GraphQLNonNull(MemberType),
+            type: MemberType,
             resolve(profile, _, ctx: Context) {
                 return ctx.memeberType.load(profile.memberTypeId);
             },

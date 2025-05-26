@@ -26,16 +26,16 @@ export const User = new GraphQLObjectType<UserType, Context>({
     name: 'User',
     fields: (): Record<string, GraphQLFieldConfig<UserType, Context>>  => ({
         id: {
-            type: new GraphQLNonNull(UUIDType),
+            type: UUIDType,
         },
         name: {
-            type: new GraphQLNonNull(GraphQLString),
+            type: GraphQLString,
         },
         balance: {
-            type: new GraphQLNonNull(GraphQLFloat),
+            type: GraphQLFloat,
         },
         posts: {
-            type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
+            type: new GraphQLList(Post),
             resolve(user, _, ctx: Context) {
                 return ctx.post.load(user.id);
             },
