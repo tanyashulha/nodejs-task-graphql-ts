@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLList } from 'graphql';
 import { UUIDType } from '../types/uuid.js';
 import { Profile } from '../types/profile.js';
 import { PrismaClient } from '@prisma/client';
@@ -11,7 +11,7 @@ export interface Context extends ReturnType<typeof loader> {
 export const ProfileQueryFields = {
     profile: {
         type: Profile,
-        args: { id: { type: new GraphQLNonNull(UUIDType) } },
+        args: { id: { type: UUIDType } },
         resolve(_, { id }: { id: string }, ctx: Context) {
             return ctx.prisma.profile.findUnique({
                 where: { id }
@@ -19,7 +19,7 @@ export const ProfileQueryFields = {
         },
     },
     profiles: {
-        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Profile))),
+        type: new GraphQLList(Profile),
         resolve(_src, _, ctx: Context) {
             return ctx.prisma.profile.findMany();
         },
