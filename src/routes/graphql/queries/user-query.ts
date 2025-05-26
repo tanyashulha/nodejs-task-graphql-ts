@@ -28,7 +28,6 @@ export const UserQueryFields = {
             }});
 
             return users.forEach((user) => ctx.user.prime(user.id, user));
-            return users.forEach((user) => ctx.user.prime(user?.id, user));
         },
     },
 }
