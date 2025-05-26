@@ -21,7 +21,7 @@ export const loader = (prisma: PrismaClient) => ({
         return ids.map((id) => users[id]);
     }),
 
-    post: new DataLoader<string, Array<Static<typeof postSchema>>>(async (ids) => {
+    post: new DataLoader<string, Array<PostType>>(async (ids) => {
         const posts = (await prisma.post.findMany({
             where: { authorId: { in: [...ids] } }
         })).reduce<Record<string, Array<PostType>>>((acc, curr) => {
@@ -34,10 +34,10 @@ export const loader = (prisma: PrismaClient) => ({
         return ids.map((id) => posts[id]);
     }),
 
-    profile: new DataLoader<string,  Static<typeof profileSchema>>(async (ids) => {
+    profile: new DataLoader<string, Static<typeof profileSchema>>(async (ids) => {
         const profiles = (await prisma.profile.findMany({
             where: { userId: { in: [...ids] } },
-        })).reduce<Record<string,  Static<typeof profileSchema>>>((acc, curr) => {
+        })).reduce<Record<string, Static<typeof profileSchema>>>((acc, curr) => {
             acc[curr.userId] = curr;
             return acc;
         }, {});

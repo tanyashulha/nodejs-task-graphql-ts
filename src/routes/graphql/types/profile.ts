@@ -1,9 +1,19 @@
-import { GraphQLBoolean, GraphQLInputObjectType, GraphQLInt, GraphQLObjectType,} from 'graphql';
+import { GraphQLBoolean, GraphQLInputObjectType, GraphQLInt, GraphQLNonNull, GraphQLObjectType,} from 'graphql';
 import { MemberType } from './member-type.js';
 import { UUIDType } from './uuid.js';
 import { MemberIdType } from './member-id-type.js';
+import { PrismaClient } from '@prisma/client';
+import { loader } from '../loader.js';
+import { profileSchema } from '../../profiles/schemas.js';
+import { Static } from '@sinclair/typebox';
 
-export const Profile = new GraphQLObjectType({
+export interface Context extends ReturnType<typeof loader> {
+    prisma: PrismaClient;
+}
+
+export type ProfileType = Static<typeof profileSchema>;
+
+export const Profile = new GraphQLObjectType<ProfileType, Context>({
     name: 'Profile',
     fields: {
         id: {
@@ -16,7 +26,10 @@ export const Profile = new GraphQLObjectType({
             type: GraphQLInt
         },
         memberType: {
-            type: MemberType,
+            type: new GraphQLNonNull(MemberType),
+            resolve(profile, _, ctx: Context) {
+                return ctx.memeberType.load(profile.memberTypeId);
+            },
         },
     },
 });

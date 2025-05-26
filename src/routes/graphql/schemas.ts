@@ -26,7 +26,7 @@ export const createGqlResponseSchema = {
 
 export const gqlSchema = new GraphQLSchema({
   query: new GraphQLObjectType({
-    name: 'RootQuery',
+    name: 'RootQueryType',
     fields: {
       ...UserQueryFields,
       ...ProfileQueryFields,

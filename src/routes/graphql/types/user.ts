@@ -49,7 +49,7 @@ export const User = new GraphQLObjectType<UserType, Context>({
         userSubscribedTo: {
             type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
             resolve(user, _, ctx: Context) {
-                if (!user?.userSubscribedTo) return [];
+                if (!user?.userSubscribedTo) return null;
                 return ctx.user.loadMany(
                     user.userSubscribedTo.map(({ authorId }) => authorId),
                 );
@@ -58,7 +58,7 @@ export const User = new GraphQLObjectType<UserType, Context>({
         subscribedToUser: {
             type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
             resolve(user, _, ctx: Context) {
-                if (!user?.subscribedToUser) return [];
+                if (!user?.subscribedToUser) return null;
                 return ctx.user.loadMany(
                     user.subscribedToUser.map(({ subscriberId }) => subscriberId),
                 );
