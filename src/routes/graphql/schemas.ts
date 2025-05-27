@@ -1,4 +1,13 @@
+import { PostQueryFields } from './queries/post-query.js';
 import { Type } from '@fastify/type-provider-typebox';
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { UserQueryFields } from './queries/user-query.js';
+import { ProfileQueryFields } from './queries/profile-query.js';
+import { MemeberTypeQueryFields } from './queries/member-type-query.js';
+import { UserMutationsFields } from './mutations/user-mutations.js';
+import { ProfileMutationsFields } from './mutations/profile-mutations.js';
+import { PostMutationsFields } from './mutations/post-mutations.js';
+import { SubscriptionMutationsFields } from './mutations/subscription-mutations.js';
 
 export const gqlResponseSchema = Type.Partial(
   Type.Object({
@@ -18,3 +27,24 @@ export const createGqlResponseSchema = {
     },
   ),
 };
+
+export const gqlSchema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'RootQueryType',
+    fields: {
+      ...UserQueryFields,
+      ...ProfileQueryFields,
+      ...PostQueryFields,
+      ...MemeberTypeQueryFields,
+    },
+  }),
+  mutation: new GraphQLObjectType({
+    name: 'Mutations',
+    fields: {
+      ...UserMutationsFields,
+      ...ProfileMutationsFields,
+      ...PostMutationsFields,
+      ...SubscriptionMutationsFields,
+    },
+  }),
+});
