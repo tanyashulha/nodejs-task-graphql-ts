@@ -40,8 +40,9 @@ export const ProfileMutationsFields = {
     deleteProfile: {
         type: GraphQLString,
         args: { id: { type: UUIDType }},
-        resolve(_, { id }: { id: string }, ctx: Context) {
-           return ctx.prisma.profile.delete({ where: { id } });
+        async resolve(_, { id }: { id: string }, ctx: Context) {
+           await ctx.prisma.profile.delete({ where: { id } });
+           return '';
         },
     },
 };

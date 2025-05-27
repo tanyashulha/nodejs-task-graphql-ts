@@ -36,8 +36,9 @@ export const UserMutationsFields = {
     deleteUser: {
         type: GraphQLString,
         args: { id: { type: UUIDType } },
-        resolve(_, { id }: { id: string }, ctx: Context) {
-            return ctx.prisma.user.delete({ where: { id } });
+        async resolve(_, { id }: { id: string }, ctx: Context) {
+            await  ctx.prisma.user.delete({ where: { id } });
+            return ''
         },
     },
 };

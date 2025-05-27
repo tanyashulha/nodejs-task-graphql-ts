@@ -11,19 +11,23 @@ export const SubscriptionMutationsFields = {
     subscribeTo: {
         type: GraphQLString,
         args: { userId: { type: UUIDType }, authorId: { type: UUIDType } },
-        resolve(_, { userId, authorId }: { userId: string, authorId: string }, ctx: Context) {
-            return ctx.prisma.user.update({ where: { id: userId }, data: {
+        async resolve(_, { userId, authorId }: { userId: string, authorId: string }, ctx: Context) {
+            await ctx.prisma.user.update({ where: { id: userId }, data: {
                 userSubscribedTo: { create: { authorId } }
             }});
+
+            return ''
         },
     },
     unsubscribeFrom: {
         type: GraphQLString,
         args: { userId: { type: UUIDType }, authorId: { type: UUIDType } },
-        resolve(_, { userId, authorId }: { userId: string, authorId: string }, ctx: Context) {
-            return ctx.prisma.subscribersOnAuthors.delete({  where: {
+        async resolve(_, { userId, authorId }: { userId: string, authorId: string }, ctx: Context) {
+            await ctx.prisma.subscribersOnAuthors.delete({  where: {
                 subscriberId_authorId: { subscriberId: userId, authorId: authorId },
             }});
+
+            return ''
         },
     },
 };

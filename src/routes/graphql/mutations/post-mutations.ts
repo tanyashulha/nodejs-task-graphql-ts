@@ -39,7 +39,8 @@ export const PostMutationsFields = {
         type: GraphQLString,
         args: { id: { type: UUIDType } },
         async resolve(_, { id }: { id: string }, ctx: Context) {
-            return ctx.prisma.post.delete({ where: { id } });
+            await ctx.prisma.post.delete({ where: { id } });
+             return ''
         },
     },
 };
